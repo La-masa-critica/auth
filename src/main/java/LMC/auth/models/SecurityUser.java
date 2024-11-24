@@ -18,11 +18,9 @@ public class SecurityUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        // Agregamos el rol
         Role role = authData.getRole();
-        authorities.add(role);
-        // Agregamos los permisos del rol
         authorities.addAll(role.getPermissions());
+        authorities.add(role);
         return authorities;
     }
 
@@ -58,5 +56,9 @@ public class SecurityUser implements UserDetails {
 
     public Profile getProfile() {
         return authData.getProfile();
+    }
+
+    public Long getId() {
+        return authData.getId();
     }
 }

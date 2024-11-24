@@ -5,24 +5,20 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jdk.dynalink.beans.StaticClass;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static javax.crypto.Cipher.SECRET_KEY;
-
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY="bbc58af422f570589f842991431ba451cf44e05e04674dbfe29687f4c881b5fa";
+    private static final String SECRET_KEY =
+            "bbc58af422f570589f842991431ba451cf44e05e04674dbfe29687f4c881b5fa";
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
@@ -30,17 +26,12 @@ public class JwtService {
     }
 
     public String getToken(HashMap<String, Object> extraClaims, UserDetails user) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getUsername())
-                .claims(
-                        extraClaims.entrySet().stream()
-                                .collect(Collectors.toMap(HashMap.Entry::getKey, HashMap.Entry::getValue))
-                )
+        return Jwts.builder().setClaims(extraClaims).setSubject(user.getUsername())
+                .claims(extraClaims.entrySet().stream()
+                        .collect(Collectors.toMap(HashMap.Entry::getKey, HashMap.Entry::getValue)))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
-                .signWith(getkey(), SignatureAlgorithm.HS256)
-                .compact();
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getkey(), SignatureAlgorithm.HS256).compact();
 
     }
 
@@ -60,13 +51,8 @@ public class JwtService {
     }
 
     private Claims getAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getkey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().setSigningKey(getkey()).build().parseClaimsJws(token).getBody();
     }
-
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaims(token);
