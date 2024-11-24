@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:data-inicializer.yml
   application:
     name: auth-service
   datasource:
