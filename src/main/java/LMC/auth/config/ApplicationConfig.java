@@ -1,8 +1,9 @@
 package LMC.auth.config;
 
-import LMC.auth.repositories.CredentialsRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import LMC.auth.models.AuthData;
+import LMC.auth.models.SecurityUser;
+import LMC.auth.repositories.AuthDataRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,29 +16,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
-    @Autowired
-    CredentialsRepository credentialsRepository;
+
+    private final AuthDataRepository authDataRepository;
+
+    public ApplicationConfig(AuthDataRepository authDataRepository) {
+        this.authDataRepository = authDataRepository;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-
         return config.getAuthenticationManager();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailService());
+        authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
 
     @Bean
-    public UserDetailsService userDetailService() {
-        return username -> this.credentialsRepository.findByUsername(username).
-                orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            AuthData authData = authDataRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+            return new SecurityUser(authData);
+        };
     }
 
     @Bean

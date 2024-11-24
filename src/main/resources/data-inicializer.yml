@@ -1,0 +1,39 @@
+# src/main/resources/data-initialization.yml
+
+# Habilitar/deshabilitar inicialización
+init:
+  enabled: true
+
+  # Lista de todos los permisos disponibles
+  permissions:
+    - READ_PRODUCTS
+    - WRITE_PRODUCTS
+    - READ_USERS
+    - WRITE_USERS
+    - READ_ORDERS
+    - WRITE_ORDERS
+    - MANAGE_ROLES
+
+  # Definición de roles y sus permisos
+  roles:
+    - name: USER
+      permissions:
+        - READ_PRODUCTS
+        - READ_ORDERS
+
+    - name: ADMIN
+      permissions:
+        - READ_PRODUCTS
+        - WRITE_PRODUCTS
+        - READ_USERS
+        - WRITE_USERS
+        - READ_ORDERS
+        - WRITE_ORDERS
+        - MANAGE_ROLES
+
+    - name: MANAGER
+      permissions:
+        - READ_PRODUCTS
+        - WRITE_PRODUCTS
+        - READ_ORDERS
+        - WRITE_ORDERS
