@@ -4,6 +4,7 @@ import LMC.auth.models.AuthResponse;
 import LMC.auth.models.LoginRequest;
 import LMC.auth.models.RegisterRequest;
 import LMC.auth.services.AuthService;
+import LMC.auth.services.JwtService;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +23,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     @Autowired
     private AuthService authService;
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
@@ -33,24 +41,21 @@ public class AuthController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<?> validateToken(HttpServletRequest request) {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido o ausente");
-        }
-
-        String token = authHeader.substring(7);
+    public ResponseEntity<?> validateToken(@RequestBody String token) {
         try {
-            // Aquí reutilizas la configuración de Spring Security para validar el token
-            JwtParser parser = Jwts.parser()
-                    .setSigningKey("mi-clave-secreta".getBytes()) // Usa la misma clave que tienes configurada
-                    .build();
+            // Extraer el username del token
+            String username = jwtService.getUsernameFromToken(token);
 
-            parser.parseClaimsJws(token);
-            return ResponseEntity.ok("Token válido");
+            // Cargar los detalles del usuario desde el repositorio
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            // Verificar la validez del token
+            if (jwtService.isTokenValid(token, userDetails)) {
+                return ResponseEntity.ok(1);
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(0);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido o expirado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(0);
         }
     }
 }
