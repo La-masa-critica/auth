@@ -1,16 +1,19 @@
-package LMC.auth.models;
+package LMC.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+public class RegisterRequest {
     String username;
     String password;
+    String name;
+    String email;
+    String phone;
+
 }

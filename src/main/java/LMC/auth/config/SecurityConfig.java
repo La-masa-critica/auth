@@ -33,14 +33,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
                                 .requestMatchers("/auth/**")
                                 .permitAll()
                                 .anyRequest().authenticated();
-
-                                //.authenticated();
                     }
             ).csrf(AbstractHttpConfigurer::disable);
-                    //.httpBasic(Customizer.withDefaults());
-
-            //http.authorizeHttpRequests().anyRequest().permitAll();
-
             return http.sessionManagement(sessionManager->
                     sessionManager
                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
