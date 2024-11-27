@@ -30,7 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.authorizeHttpRequests(customizeRequests -> {
                         customizeRequests
-                                .requestMatchers("/auth/**")
+                                .requestMatchers("/api/v1/**")
                                 .permitAll()
                                 .anyRequest().authenticated();
                     }
