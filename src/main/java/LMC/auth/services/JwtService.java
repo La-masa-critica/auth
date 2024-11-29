@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY =
-            "bbc58af422f570589f842991431ba451cf44e05e04674dbfe29687f4c881b5fa";
+    private static final String SECRET_KEY = "bbc58af422f570589f842991431ba451cf44e05e04674dbfe29687f4c881b5fa";
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
@@ -33,6 +32,13 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getkey(), SignatureAlgorithm.HS256).compact();
 
+    }
+
+    public String generateServiceToken() {
+        return Jwts.builder().setSubject("service")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 24 * 3600 * 1000 * 7))
+                .signWith(getkey(), SignatureAlgorithm.HS256).compact();
     }
 
     public Key getkey() {
@@ -50,7 +56,17 @@ public class JwtService {
 
     }
 
-    private Claims getAllClaims(String token) {
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(SECRET_KEY).build().parseClaimsJws(token); // Valida firma y expiración
+            return true;
+        } catch (Exception e) {
+            System.out.println("Token inválido: " + e.getMessage());
+            return false;
+        }
+    }
+
+    Claims getAllClaims(String token) {
         return Jwts.parser().setSigningKey(getkey()).build().parseClaimsJws(token).getBody();
     }
 

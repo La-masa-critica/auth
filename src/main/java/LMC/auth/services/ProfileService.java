@@ -2,15 +2,13 @@ package LMC.auth.services;
 
 import LMC.auth.models.Profile;
 import LMC.auth.repositories.ProfileRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class ProfileService {
     private final ProfileRepository profileRepository;
-
-    public ProfileService(ProfileRepository profileRepository) {
-        this.profileRepository = profileRepository;
-    }
 
     public void deleteProfile(Long profileId) {
         profileRepository.deleteById(profileId);

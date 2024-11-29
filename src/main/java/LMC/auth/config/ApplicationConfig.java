@@ -4,6 +4,7 @@ package LMC.auth.config;
 import LMC.auth.models.AuthData;
 import LMC.auth.models.SecurityUser;
 import LMC.auth.repositories.AuthDataRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@AllArgsConstructor
 public class ApplicationConfig {
-
     private final AuthDataRepository authDataRepository;
-
-    public ApplicationConfig(AuthDataRepository authDataRepository) {
-        this.authDataRepository = authDataRepository;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

@@ -37,3 +37,9 @@ init:
         - WRITE_PRODUCTS
         - READ_ORDERS
         - WRITE_ORDERS
+
+    - name: SERVICE
+      permissions:
+        - READ_PRODUCTS
+        - READ_ORDERS
+        - READ_USERS

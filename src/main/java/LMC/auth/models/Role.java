@@ -1,5 +1,6 @@
 package LMC.auth.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +25,12 @@ public class Role implements GrantedAuthority {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @JsonIgnore
     @Builder.Default
     @OneToMany(mappedBy = "role")
     private Set<AuthData> users = new HashSet<>();
 
+    @JsonIgnore
     @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

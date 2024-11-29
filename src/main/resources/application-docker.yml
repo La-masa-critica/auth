@@ -12,22 +12,22 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
+    #show-sql: true
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
         current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   cloud:
-    # openfeign:
-    #   client:
-    #     config:
-    #       item-service:
-    #         connect-timeout: 5000
-    #         read-timeout: 5000
-    #         logger-level: full
     loadbalancer:
       enabled: true
+
+logging:
+  level:
+    org:
+      root: info
+      springframework.security: warn
+      hibernate: error
 
 eureka:
   client:
@@ -38,3 +38,7 @@ eureka:
 
 server:
   port: 8093
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+    min-response-size: 1024

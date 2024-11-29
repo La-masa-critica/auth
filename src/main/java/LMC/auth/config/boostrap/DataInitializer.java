@@ -5,6 +5,7 @@ import LMC.auth.models.Role;
 import LMC.auth.repositories.PermissionRepository;
 import LMC.auth.repositories.RoleRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -15,21 +16,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@AllArgsConstructor
 public class DataInitializer implements CommandLineRunner {
     private final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
-
     private final DataInitializationProperties properties;
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
-
-    public DataInitializer(
-            DataInitializationProperties properties,
-            RoleRepository roleRepository,
-            PermissionRepository permissionRepository) {
-        this.properties = properties;
-        this.roleRepository = roleRepository;
-        this.permissionRepository = permissionRepository;
-    }
 
     @Override
     @Transactional
@@ -38,7 +30,6 @@ public class DataInitializer implements CommandLineRunner {
             logger.info("Data initialization is disabled");
             return;
         }
-
         try {
             initializePermissions();
             initializeRoles();

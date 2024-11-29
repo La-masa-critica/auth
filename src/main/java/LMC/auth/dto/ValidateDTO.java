@@ -14,5 +14,6 @@ public class ValidateDTO {
     private long userId;
     private String role;
     private Set<String> permissions;
+    private Long expiration;
     private String message;
 }

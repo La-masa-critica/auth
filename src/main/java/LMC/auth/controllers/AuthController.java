@@ -6,25 +6,23 @@ import LMC.auth.dto.RegisterRequest;
 import LMC.auth.dto.ValidateDTO;
 import LMC.auth.services.AuthService;
 import LMC.auth.services.JwtService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @RequestMapping("/api/v1/auth/")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthController {
-    @Autowired
-    private AuthService authService;
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final AuthService authService;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {

@@ -1,6 +1,8 @@
 package LMC.auth.config.boostrap;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,8 @@ public class DataInitializationProperties {
     private List<RoleDefinition> roles;
     private List<String> permissions;
 
-    @Data
+    @Getter
+    @Setter
     public static class RoleDefinition {
         private String name;
         private Set<String> permissions;
